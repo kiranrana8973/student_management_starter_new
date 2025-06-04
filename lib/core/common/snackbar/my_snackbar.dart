@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-showMySnackBar({
+void showMySnackBar({
   required BuildContext context,
   required String message,
   Color? color,

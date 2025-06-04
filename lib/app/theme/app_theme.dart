@@ -4,7 +4,7 @@ import 'package:student_management/app/constant/theme_constant.dart';
 class AppTheme {
   AppTheme._();
 
-  static getApplicationTheme({required bool isDarkMode}) {
+  static ThemeData getApplicationTheme({required bool isDarkMode}) {
     return ThemeData(
       // change the theme according to the user preference
       colorScheme: isDarkMode
