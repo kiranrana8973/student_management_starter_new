@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_management/features/auth/presentation/view/register_view.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_event.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_state.dart';
 import 'package:student_management/features/auth/presentation/view_model/register_view_model/register_view_model.dart';
