@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_event.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_state.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_view_model.dart';
 
 class BatchView extends StatelessWidget {
   BatchView({super.key});
@@ -26,8 +30,46 @@ class BatchView extends StatelessWidget {
                 },
               ),
               SizedBox(height: 10),
-              ElevatedButton(onPressed: () {}, child: Text('Add Batch')),
+              ElevatedButton(
+                onPressed: () {
+                  if (_batchViewFormKey.currentState!.validate()) {
+                    context.read<BatchViewModel>().add(
+                      CreateBatchEvent(batchName: batchNameController.text),
+                    );
+                  }
+                },
+                child: Text('Add Batch'),
+              ),
               SizedBox(height: 10),
+              BlocBuilder<BatchViewModel, BatchState>(
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return CircularProgressIndicator();
+                  }
+                  if (state.errorMessage != null) {
+                    return Text('Error: ${state.errorMessage}');
+                  }
+                  return Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (context, index) {
+                        final batch = state.batches[index];
+                        return ListTile(
+                          title: Text(batch.batchName),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              context.read<BatchViewModel>().add(
+                                DeleteBatchEvent(batchId: batch.batchId ?? ''),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      itemCount: state.batches.length,
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),

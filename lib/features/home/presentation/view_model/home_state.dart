@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_management/app/service_locator/service_locator.dart';
 import 'package:student_management/features/batch/presentation/view/batch_view.dart';
 import 'package:student_management/features/batch/presentation/view_model/batch_view_model.dart';
 import 'package:student_management/features/course/presentation/view/course_view.dart';
@@ -23,7 +24,10 @@ class HomeState {
           create: (context) => CourseViewModel(),
           child: CourseView(),
         ),
-        BlocProvider(create: (context) => BatchViewModel(), child: BatchView()),
+        BlocProvider.value(
+          value: serviceLocator<BatchViewModel>(),
+          child: BatchView(),
+        ),
         AccountView(),
       ],
     );
