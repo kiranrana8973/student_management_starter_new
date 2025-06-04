@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_management/app/service_locator/service_locator.dart';
 import 'package:student_management/features/auth/presentation/view/login_view.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_view_model.dart';
 
@@ -15,8 +16,8 @@ class SplashViewModel extends Cubit<void> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => BlocProvider(
-              create: (context) => LoginViewModel(),
+            builder: (context) => BlocProvider.value(
+              value: serviceLocator<LoginViewModel>(),
               child: LoginView(),
             ),
           ),

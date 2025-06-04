@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_management/app/service_locator/service_locator.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_event.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_state.dart';
 import 'package:student_management/features/auth/presentation/view_model/register_view_model/register_view_model.dart';
@@ -21,8 +22,8 @@ class LoginViewModel extends Bloc<LoginEvent, LoginState> {
       Navigator.push(
         event.context,
         MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => RegisterViewModel(),
+          builder: (context) => BlocProvider.value(
+            value: serviceLocator<RegisterViewModel>(),
             child: event.destination,
           ),
         ),
@@ -39,8 +40,8 @@ class LoginViewModel extends Bloc<LoginEvent, LoginState> {
       Navigator.pushReplacement(
         event.context,
         MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(
-            providers: [BlocProvider(create: (context) => HomeViewModel())],
+          builder: (context) => BlocProvider.value(
+            value: serviceLocator<HomeViewModel>(),
             child: event.destination,
           ),
         ),
