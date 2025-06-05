@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_management/features/batch/domain/entity/batch_entity.dart';
 import 'package:student_management/features/batch/domain/use_case/create_batch_usecase.dart';
 import 'package:student_management/features/batch/domain/use_case/delete_batch_usecase.dart';
 import 'package:student_management/features/batch/domain/use_case/get_all_batch_usecase.dart';

@@ -5,7 +5,6 @@ import 'package:student_management/features/auth/presentation/view_model/registe
 import 'package:student_management/features/batch/data/data_source/local_datasource/batch_local_datasource.dart';
 import 'package:student_management/features/batch/data/model/batch_hive_model.dart';
 import 'package:student_management/features/batch/data/repository/local_repository/batch_local_repository.dart';
-import 'package:student_management/features/batch/domain/repository/batch_repository.dart';
 import 'package:student_management/features/batch/domain/use_case/create_batch_usecase.dart';
 import 'package:student_management/features/batch/domain/use_case/delete_batch_usecase.dart';
 import 'package:student_management/features/batch/domain/use_case/get_all_batch_usecase.dart';

@@ -44,7 +44,11 @@ class BatchView extends StatelessWidget {
               BlocBuilder<BatchViewModel, BatchState>(
                 builder: (context, state) {
                   if (state.isLoading) {
-                    return CircularProgressIndicator();
+                    return SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: CircularProgressIndicator(),
+                    );
                   }
                   if (state.errorMessage != null) {
                     return Text('Error: ${state.errorMessage}');
