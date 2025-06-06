@@ -13,7 +13,6 @@ class AppTheme {
       brightness: isDarkMode ? Brightness.dark : Brightness.light,
       fontFamily: 'Montserrat',
       useMaterial3: true,
-
       // Change app bar color
       appBarTheme: const AppBarTheme(
         elevation: 0,
@@ -21,10 +20,8 @@ class AppTheme {
         centerTitle: true,
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
       ),
-
       // Scaffold theme
       scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
-
       // Change elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -37,7 +34,6 @@ class AppTheme {
           ),
         ),
       ),
-
       // Change text field theme
       inputDecorationTheme: const InputDecorationTheme(
         contentPadding: EdgeInsets.all(15),

@@ -5,12 +5,8 @@ import 'package:student_management/features/batch/domain/entity/batch_entity.dar
 
 class BatchLocalDatasource implements IBatchDataSource {
   final HiveService hiveService;
-  final BatchHiveModel batchHiveModel;
 
-  BatchLocalDatasource({
-    required this.hiveService,
-    required this.batchHiveModel,
-  });
+  BatchLocalDatasource({required this.hiveService});
 
   @override
   Future<void> addBatch(BatchEntity batch) async {

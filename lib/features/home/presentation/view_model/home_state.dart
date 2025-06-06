@@ -20,8 +20,8 @@ class HomeState {
       selectedIndex: 0,
       views: [
         DashboardView(),
-        BlocProvider(
-          create: (context) => CourseViewModel(),
+        BlocProvider.value(
+          value: serviceLocator<CourseViewModel>(),
           child: CourseView(),
         ),
         BlocProvider.value(

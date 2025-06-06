@@ -53,11 +53,10 @@ class BatchViewModel extends Bloc<BatchEvent, BatchState> {
         emit(state.copyWith(isLoading: false, errorMessage: failure.message));
       },
       (_) {
-        // Reload batches after creating a new batch
+        emit(state.copyWith(isLoading: false));
         add(LoadBatchesEvent());
       },
     );
-    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> _onDeleteBatch(
@@ -75,10 +74,9 @@ class BatchViewModel extends Bloc<BatchEvent, BatchState> {
         emit(state.copyWith(isLoading: false, errorMessage: failure.message));
       },
       (_) {
-        // Reload batches after deleting a batch
+        emit(state.copyWith(isLoading: false));
         add(LoadBatchesEvent());
       },
     );
-    emit(state.copyWith(isLoading: false));
   }
 }

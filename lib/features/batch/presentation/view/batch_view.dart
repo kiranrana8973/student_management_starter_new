@@ -44,10 +44,14 @@ class BatchView extends StatelessWidget {
               BlocBuilder<BatchViewModel, BatchState>(
                 builder: (context, state) {
                   if (state.isLoading) {
-                    return SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: CircularProgressIndicator(),
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (state.batches.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No batches available',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     );
                   }
                   if (state.errorMessage != null) {
@@ -59,6 +63,7 @@ class BatchView extends StatelessWidget {
                         final batch = state.batches[index];
                         return ListTile(
                           title: Text(batch.batchName),
+                          subtitle: Text('${batch.batchId}'),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
