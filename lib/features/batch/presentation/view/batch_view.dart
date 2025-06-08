@@ -59,6 +59,7 @@ class BatchView extends StatelessWidget {
                   }
                   return Expanded(
                     child: ListView.builder(
+                      shrinkWrap: true,
                       itemBuilder: (context, index) {
                         final batch = state.batches[index];
                         return ListTile(

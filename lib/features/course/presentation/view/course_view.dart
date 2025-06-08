@@ -63,6 +63,7 @@ class CourseView extends StatelessWidget {
                   }
                   return Expanded(
                     child: ListView.builder(
+                      shrinkWrap: true,
                       itemCount: state.courses.length,
                       itemBuilder: (context, index) {
                         final course = state.courses[index];
