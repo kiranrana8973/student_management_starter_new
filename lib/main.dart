@@ -5,14 +5,10 @@ import 'package:student_management/core/network/hive_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await initDependencies();
-
   // init Hive service
   await HiveService().init();
-
   // Delete database
   // await HiveService().clearAll();
-
   runApp(App());
 }
