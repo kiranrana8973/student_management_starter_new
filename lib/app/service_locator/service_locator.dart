@@ -1,5 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:student_management/core/network/hive_service.dart';
+import 'package:student_management/features/auth/data/data_source/local_datasource/student_local_datasource.dart';
+import 'package:student_management/features/auth/data/repository/local_repository/student_local_repository.dart';
+import 'package:student_management/features/auth/domain/use_case/student_get_current_usecase.dart';
+import 'package:student_management/features/auth/domain/use_case/student_image_upload_usecase.dart';
+import 'package:student_management/features/auth/domain/use_case/student_login_usecase.dart';
+import 'package:student_management/features/auth/domain/use_case/student_register_usecase.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_view_model.dart';
 import 'package:student_management/features/auth/presentation/view_model/register_view_model/register_view_model.dart';
 import 'package:student_management/features/batch/data/data_source/local_datasource/batch_local_datasource.dart';
@@ -19,33 +25,30 @@ import 'package:student_management/features/splash/presentation/view_model/splas
 
 final serviceLocator = GetIt.instance;
 
-Future initDependencies() async {
+Future<void> initDependencies() async {
   await _initHiveService();
-  // Initialize all modules
   await _initCourseModule();
   await _initBatchModule();
   await _initAuthModule();
-  await _initHomeModule(); 
+  await _initHomeModule();
   await _initSplashModule();
 }
 
-Future _initHiveService() async {
+Future<void> _initHiveService() async {
   serviceLocator.registerLazySingleton(() => HiveService());
 }
 
-Future _initCourseModule() async {
+Future<void> _initCourseModule() async {
   serviceLocator.registerFactory<CourseLocalDataSource>(
     () => CourseLocalDataSource(hiveService: serviceLocator<HiveService>()),
   );
 
-  // Repository
   serviceLocator.registerFactory(
     () => CourseLocalRepository(
       courseLocalDataSource: serviceLocator<CourseLocalDataSource>(),
     ),
   );
 
-  // Use cases
   serviceLocator.registerFactory(
     () => GetAllCourseUsecase(
       courseRepository: serviceLocator<CourseLocalRepository>(),
@@ -64,7 +67,6 @@ Future _initCourseModule() async {
     ),
   );
 
-  // View Model
   serviceLocator.registerFactory(
     () => CourseViewModel(
       getAllCourseUsecase: serviceLocator<GetAllCourseUsecase>(),
@@ -74,54 +76,98 @@ Future _initCourseModule() async {
   );
 }
 
-Future _initBatchModule() async {
-  // Register Data Source
-  serviceLocator.registerLazySingleton(
-    () => BatchLocalDatasource(hiveService: serviceLocator()),
+Future<void> _initBatchModule() async {
+  serviceLocator.registerFactory(
+    () => BatchLocalDatasource(hiveService: serviceLocator<HiveService>()),
   );
 
-  // Register Local Repository
-  serviceLocator.registerLazySingleton<BatchLocalRepository>(
-    () => BatchLocalRepository(batchLocalDatasource: serviceLocator()),
+  serviceLocator.registerFactory<BatchLocalRepository>(
+    () => BatchLocalRepository(
+      batchLocalDatasource: serviceLocator<BatchLocalDatasource>(),
+    ),
   );
 
-  // Register use cases
-  serviceLocator.registerLazySingleton(
+  serviceLocator.registerFactory(
     () => GetAllBatchUsecase(
       batchRepository: serviceLocator<BatchLocalRepository>(),
     ),
   );
-  serviceLocator.registerLazySingleton(
+  serviceLocator.registerFactory(
     () => CreateBatchUsecase(
       batchRepository: serviceLocator<BatchLocalRepository>(),
     ),
   );
-  serviceLocator.registerLazySingleton(
+  serviceLocator.registerFactory(
     () => DeleteBatchUsecase(
       batchRepository: serviceLocator<BatchLocalRepository>(),
     ),
   );
-  // Register ViewModel
-  serviceLocator.registerFactory(
+
+  serviceLocator.registerLazySingleton(
     () => BatchViewModel(
-      getAllBatchUsecase: serviceLocator(),
-      createBatchUsecase: serviceLocator(),
-      deleteBatchUsecase: serviceLocator(),
+      getAllBatchUsecase: serviceLocator<GetAllBatchUsecase>(),
+      createBatchUsecase: serviceLocator<CreateBatchUsecase>(),
+      deleteBatchUsecase: serviceLocator<DeleteBatchUsecase>(),
     ),
   );
 }
 
-Future _initHomeModule() async {
-  serviceLocator.registerLazySingleton(
+Future<void> _initAuthModule() async {
+  serviceLocator.registerFactory(
+    () => StudentLocalDatasource(hiveService: serviceLocator<HiveService>()),
+  );
+
+  serviceLocator.registerFactory(
+    () => StudentLocalRepository(
+      studentLocalDatasource: serviceLocator<StudentLocalDatasource>(),
+    ),
+  );
+
+  serviceLocator.registerFactory(
+    () => StudentLoginUsecase(
+      studentRepository: serviceLocator<StudentLocalRepository>(),
+    ),
+  );
+
+  serviceLocator.registerFactory(
+    () => StudentRegisterUsecase(
+      studentRepository: serviceLocator<StudentLocalRepository>(),
+    ),
+  );
+
+  serviceLocator.registerFactory(
+    () => UploadImageUsecase(
+      studentRepository: serviceLocator<StudentLocalRepository>(),
+    ),
+  );
+
+  serviceLocator.registerFactory(
+    () => StudentGetCurrentUsecase(
+      studentRepository: serviceLocator<StudentLocalRepository>(),
+    ),
+  );
+
+  serviceLocator.registerFactory(
+    () => RegisterViewModel(
+      serviceLocator<BatchViewModel>(),
+      serviceLocator<CourseViewModel>(),
+      serviceLocator<StudentRegisterUsecase>(),
+      serviceLocator<UploadImageUsecase>(),
+    ),
+  );
+
+  // Register LoginViewModel WITHOUT HomeViewModel to avoid circular dependency
+  serviceLocator.registerFactory(
+    () => LoginViewModel(serviceLocator<StudentLoginUsecase>()),
+  );
+}
+
+Future<void> _initHomeModule() async {
+  serviceLocator.registerFactory(
     () => HomeViewModel(loginViewModel: serviceLocator<LoginViewModel>()),
   );
 }
 
-Future _initAuthModule() async {
-  serviceLocator.registerFactory(() => LoginViewModel());
-  serviceLocator.registerFactory(() => RegisterViewModel());
-}
-
-Future _initSplashModule() async {
+Future<void> _initSplashModule() async {
   serviceLocator.registerFactory(() => SplashViewModel());
 }

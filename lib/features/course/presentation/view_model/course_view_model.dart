@@ -17,15 +17,15 @@ class CourseViewModel extends Bloc<CourseEvent, CourseState> {
        _createCourseUsecase = createCourseUsecase,
        _deleteCourseUsecase = deleteCourseUsecase,
        super(CourseState.initial()) {
-    on<CourseLoadEvent>(_onCourseLoad);
+    on<LoadCourseEvent>(_onCourseLoad);
     on<CreateCourseEvent>(_onCreateCourse);
     on<DeleteCourseEvent>(_onDeleteCourse);
 
-    add(CourseLoadEvent());
+    add(LoadCourseEvent());
   }
 
   Future<void> _onCourseLoad(
-    CourseLoadEvent event,
+    LoadCourseEvent event,
     Emitter<CourseState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
@@ -53,7 +53,7 @@ class CourseViewModel extends Bloc<CourseEvent, CourseState> {
           emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
       (_) {
         emit(state.copyWith(isLoading: false));
-        add(CourseLoadEvent());
+        add(LoadCourseEvent());
       },
     );
   }
@@ -73,7 +73,7 @@ class CourseViewModel extends Bloc<CourseEvent, CourseState> {
           emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
       (_) {
         emit(state.copyWith(isLoading: false));
-        add(CourseLoadEvent());
+        add(LoadCourseEvent());
       },
     );
   }

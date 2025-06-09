@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_management/features/auth/presentation/view/register_view.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_event.dart';
 import 'package:student_management/features/auth/presentation/view_model/login_view_model/login_view_model.dart';
-import 'package:student_management/features/home/presentation/view/home_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -63,9 +61,10 @@ class LoginView extends StatelessWidget {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           context.read<LoginViewModel>().add(
-                            NavigateToHomeView(
+                            LoginWithEmailAndPasswordEvent(
                               context: context,
-                              destination: HomeView(),
+                              username: _usernameController.text,
+                              password: _passwordController.text,
                             ),
                           );
                         }
@@ -88,10 +87,7 @@ class LoginView extends StatelessWidget {
                       key: const ValueKey('registerButton'),
                       onPressed: () {
                         context.read<LoginViewModel>().add(
-                          NavigateToRegisterView(
-                            context: context,
-                            destination: RegisterView(),
-                          ),
+                          NavigateToRegisterViewEvent(context: context),
                         );
                       },
                       child: const SizedBox(

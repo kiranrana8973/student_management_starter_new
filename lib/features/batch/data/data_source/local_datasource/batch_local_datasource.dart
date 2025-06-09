@@ -29,7 +29,7 @@ class BatchLocalDatasource implements IBatchDataSource {
   @override
   Future<List<BatchEntity>> getBatches() async {
     try {
-      final batches = await hiveService.getBatches();
+      final batches = await hiveService.getAllBatches();
       return BatchHiveModel.toEntityList(batches);
     } catch (e) {
       throw Exception('Failed to get batches: $e');

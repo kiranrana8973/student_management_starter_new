@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:student_management/features/batch/domain/entity/batch_entity.dart';
 import 'package:student_management/features/course/domain/entity/course_entity.dart';
 
-class AuthEntity extends Equatable {
+class StudentEntity extends Equatable {
   final String? userId;
   final String fName;
   final String lName;
@@ -13,7 +13,7 @@ class AuthEntity extends Equatable {
   final String username;
   final String password;
 
-  const AuthEntity({
+  const StudentEntity({
     this.userId,
     required this.fName,
     required this.lName,

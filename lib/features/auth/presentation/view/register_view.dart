@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
+import 'package:student_management/features/auth/presentation/view_model/register_view_model/register_event.dart';
+import 'package:student_management/features/auth/presentation/view_model/register_view_model/register_view_model.dart';
+import 'package:student_management/features/batch/domain/entity/batch_entity.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_state.dart';
+import 'package:student_management/features/batch/presentation/view_model/batch_view_model.dart';
+import 'package:student_management/features/course/domain/entity/course_entity.dart';
+import 'package:student_management/features/course/presentation/view_model/course_state.dart';
+import 'package:student_management/features/course/presentation/view_model/course_view_model.dart';
 
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
@@ -10,6 +22,9 @@ class RegisterView extends StatelessWidget {
   final _phoneController = TextEditingController(text: '123456789');
   final _usernameController = TextEditingController(text: 'kiran');
   final _passwordController = TextEditingController(text: 'kiran123');
+
+  BatchEntity? _dropDownValue;
+  final List<CourseEntity> _lstCourseSelected = [];
 
   @override
   Widget build(BuildContext context) {
@@ -101,71 +116,72 @@ class RegisterView extends StatelessWidget {
                       return null;
                     }),
                   ),
-                  // _gap,
-                  // BlocBuilder<BatchBloc, BatchState>(builder: (context, state) {
-                  //   return DropdownButtonFormField<BatchEntity>(
-                  //     items: state.batches
-                  //         .map((e) => DropdownMenuItem<BatchEntity>(
-                  //               value: e,
-                  //               child: Text(e.batchName),
-                  //             ))
-                  //         .toList(),
-                  //     onChanged: (value) {
-                  //       _dropDownValue = value;
-                  //     },
-                  //     value: _dropDownValue,
-                  //     decoration: const InputDecoration(
-                  //       labelText: 'Select Batch',
-                  //     ),
-                  //     validator: ((value) {
-                  //       if (value == null) {
-                  //         return 'Please select batch';
-                  //       }
-                  //       return null;
-                  //     }),
-                  //   );
-                  // }),
                   _gap,
-                  // BlocBuilder<CourseBloc, CourseState>(
-                  //     builder: (context, courseState) {
-                  //   if (courseState.isLoading) {
-                  //     return const CircularProgressIndicator();
-                  //   } else {
-                  //     return MultiSelectDialogField(
-                  //       title: const Text('Select course'),
-                  //       items: courseState.courses
-                  //           .map(
-                  //             (course) => MultiSelectItem(
-                  //               course,
-                  //               course.courseName,
-                  //             ),
-                  //           )
-                  //           .toList(),
-                  //       listType: MultiSelectListType.CHIP,
-                  //       buttonText: const Text(
-                  //         'Select course',
-                  //         style: TextStyle(color: Colors.black),
-                  //       ),
-                  //       buttonIcon: const Icon(Icons.search),
-                  //       onConfirm: (values) {
-                  //         _lstCourseSelected.clear();
-                  //         _lstCourseSelected.addAll(values);
-                  //       },
-                  //       decoration: BoxDecoration(
-                  //         border: Border.all(
-                  //           color: Colors.black87,
-                  //         ),
-                  //         borderRadius: BorderRadius.circular(5),
-                  //       ),
-                  //       validator: ((value) {
-                  //         if (value == null || value.isEmpty) {
-                  //           return 'Please select courses';
-                  //         }
-                  //         return null;
-                  //       }),
-                  //     );
-                  //   }
-                  // }),
+                  BlocBuilder<BatchViewModel, BatchState>(
+                    builder: (context, state) {
+                      return DropdownButtonFormField<BatchEntity>(
+                        items: state.batches
+                            .map(
+                              (e) => DropdownMenuItem<BatchEntity>(
+                                value: e,
+                                child: Text(e.batchName),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          _dropDownValue = value;
+                        },
+                        value: _dropDownValue,
+                        decoration: const InputDecoration(
+                          labelText: 'Select Batch',
+                        ),
+                        validator: ((value) {
+                          if (value == null) {
+                            return 'Please select batch';
+                          }
+                          return null;
+                        }),
+                      );
+                    },
+                  ),
+                  _gap,
+                  BlocBuilder<CourseViewModel, CourseState>(
+                    builder: (context, courseState) {
+                      if (courseState.isLoading) {
+                        return const CircularProgressIndicator();
+                      } else {
+                        return MultiSelectDialogField(
+                          title: const Text('Select course'),
+                          items: courseState.courses
+                              .map(
+                                (course) =>
+                                    MultiSelectItem(course, course.courseName),
+                              )
+                              .toList(),
+                          listType: MultiSelectListType.CHIP,
+                          buttonText: const Text(
+                            'Select course',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          buttonIcon: const Icon(Icons.search),
+                          onConfirm: (values) {
+                            _lstCourseSelected.clear();
+                            _lstCourseSelected.addAll(values);
+                          },
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black87),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          validator: ((value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select courses';
+                            }
+                            return null;
+                          }),
+                        );
+                      }
+                    },
+                  ),
                   _gap,
                   TextFormField(
                     controller: _usernameController,
@@ -194,7 +210,20 @@ class RegisterView extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_key.currentState!.validate()) {}
+                        if (_key.currentState!.validate()) {
+                          context.read<RegisterViewModel>().add(
+                            RegisterStudentEvent(
+                              context: context,
+                              fName: _fnameController.text,
+                              lName: _lnameController.text,
+                              phone: _phoneController.text,
+                              batch: _dropDownValue!,
+                              courses: _lstCourseSelected,
+                              username: _usernameController.text,
+                              password: _passwordController.text,
+                            ),
+                          );
+                        }
                       },
                       child: const Text('Register'),
                     ),

@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 part 'student_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.studentTableId)
-class AuthHiveModel extends Equatable {
+class StudentHiveModel extends Equatable {
   @HiveField(0)
   final String? studentId;
   @HiveField(1)
@@ -29,7 +29,7 @@ class AuthHiveModel extends Equatable {
   @HiveField(8)
   final String password;
 
-  AuthHiveModel({
+  StudentHiveModel({
     String? studentId,
     required this.fName,
     required this.lName,
@@ -42,7 +42,7 @@ class AuthHiveModel extends Equatable {
   }) : studentId = studentId ?? const Uuid().v4();
 
   // Initial Constructor
-  const AuthHiveModel.initial()
+  const StudentHiveModel.initial()
     : studentId = '',
       fName = '',
       lName = '',
@@ -54,8 +54,8 @@ class AuthHiveModel extends Equatable {
       password = '';
 
   // From Entity
-  factory AuthHiveModel.fromEntity(AuthEntity entity) {
-    return AuthHiveModel(
+  factory StudentHiveModel.fromEntity(StudentEntity entity) {
+    return StudentHiveModel(
       studentId: entity.userId,
       fName: entity.fName,
       lName: entity.lName,
@@ -69,8 +69,8 @@ class AuthHiveModel extends Equatable {
   }
 
   // To Entity
-  AuthEntity toEntity() {
-    return AuthEntity(
+  StudentEntity toEntity() {
+    return StudentEntity(
       userId: studentId,
       fName: fName,
       lName: lName,

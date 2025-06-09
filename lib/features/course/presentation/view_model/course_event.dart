@@ -7,7 +7,7 @@ sealed class CourseEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CourseLoadEvent extends CourseEvent {}
+class LoadCourseEvent extends CourseEvent {}
 
 class CreateCourseEvent extends CourseEvent {
   final String courseName;
