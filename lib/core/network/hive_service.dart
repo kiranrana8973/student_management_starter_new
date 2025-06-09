@@ -19,8 +19,11 @@ class HiveService {
     Hive.registerAdapter(StudentHiveModelAdapter());
 
     // Add Dummy Data
-    await addBatchData();
-    await addCourseData();  }
+    // await addBatchData();
+    // await addCourseData();
+
+    // clearAll();
+  }
 
   // Add Dummy data for batch and course
   Future<void> addBatchData() async {
