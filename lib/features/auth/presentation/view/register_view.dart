@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
@@ -11,10 +13,17 @@ import 'package:student_management/features/batch/presentation/view_model/batch_
 import 'package:student_management/features/course/domain/entity/course_entity.dart';
 import 'package:student_management/features/course/presentation/view_model/course_state.dart';
 import 'package:student_management/features/course/presentation/view_model/course_view_model.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:image_picker/image_picker.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
   RegisterView({super.key});
 
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final _gap = const SizedBox(height: 8);
   final _key = GlobalKey<FormState>();
   final _fnameController = TextEditingController(text: 'kiran');
@@ -25,6 +34,32 @@ class RegisterView extends StatelessWidget {
 
   BatchEntity? _dropDownValue;
   final List<CourseEntity> _lstCourseSelected = [];
+
+  // Check for camera permission
+  Future<void> checkCameraPermission() async {
+    if (await Permission.camera.request().isRestricted ||
+        await Permission.camera.request().isDenied) {
+      await Permission.camera.request();
+    }
+  }
+
+  File? _img;
+  Future _browseImage(ImageSource imageSource) async {
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      if (image != null) {
+        setState(() {
+          _img = File(image.path);
+          // Send image to server
+          context.read<RegisterViewModel>().add(UploadImageEvent(file: _img!));
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +89,22 @@ class RegisterView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  checkCameraPermission().then((_) {
+                                    _browseImage(ImageSource.camera);
+                                  });
+                                  Navigator.pop(context);
+                                },
                                 icon: const Icon(Icons.camera),
                                 label: const Text('Camera'),
                               ),
                               ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: () {
+                                  checkCameraPermission().then((_) {
+                                    _browseImage(ImageSource.gallery);
+                                  });
+                                  Navigator.pop(context);
+                                },
                                 icon: const Icon(Icons.image),
                                 label: const Text('Gallery'),
                               ),
@@ -73,13 +118,13 @@ class RegisterView extends StatelessWidget {
                       width: 200,
                       child: CircleAvatar(
                         radius: 50,
-                        // backgroundImage: _img != null
-                        //     ? FileImage(_img!)
-                        //     : const AssetImage('assets/images/profile.png')
+                        backgroundImage: _img != null
+                            ? FileImage(_img!)
+                            : const AssetImage('assets/images/profile.png')
+                                  as ImageProvider,
+                        // backgroundImage:
+                        //     const AssetImage('assets/images/profile.png')
                         //         as ImageProvider,
-                        backgroundImage:
-                            const AssetImage('assets/images/profile.png')
-                                as ImageProvider,
                       ),
                     ),
                   ),
