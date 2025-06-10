@@ -19,7 +19,9 @@ import 'package:student_management/features/batch/domain/use_case/delete_batch_u
 import 'package:student_management/features/batch/domain/use_case/get_all_batch_usecase.dart';
 import 'package:student_management/features/batch/presentation/view_model/batch_view_model.dart';
 import 'package:student_management/features/course/data/data_source/local_datasource/course_local_data_source.dart';
+import 'package:student_management/features/course/data/data_source/remote_datasource/course_remote_datasource.dart';
 import 'package:student_management/features/course/data/repository/local_repository/course_local_repository.dart';
+import 'package:student_management/features/course/data/repository/remote_repository/course_remote_repository.dart';
 import 'package:student_management/features/course/domain/use_case/create_course_usecase.dart';
 import 'package:student_management/features/course/domain/use_case/delete_course_usecase.dart';
 import 'package:student_management/features/course/domain/use_case/get_all_course_usecase.dart';
@@ -51,31 +53,42 @@ Future<void> initApiModule() async {
 }
 
 Future<void> _initCourseModule() async {
+  // Data Source
+  serviceLocator.registerFactory(
+    () => CourseRemoteDataSource(apiService: serviceLocator<ApiService>()),
+  );
   serviceLocator.registerFactory<CourseLocalDataSource>(
     () => CourseLocalDataSource(hiveService: serviceLocator<HiveService>()),
   );
 
+  // Repository
+  serviceLocator.registerFactory<CourseRemoteRepository>(
+    () => CourseRemoteRepository(
+      courseRemoteDataSource: serviceLocator<CourseRemoteDataSource>(),
+    ),
+  );
   serviceLocator.registerFactory(
     () => CourseLocalRepository(
       courseLocalDataSource: serviceLocator<CourseLocalDataSource>(),
     ),
   );
 
+  // Usecase
   serviceLocator.registerFactory(
     () => GetAllCourseUsecase(
-      courseRepository: serviceLocator<CourseLocalRepository>(),
+      courseRepository: serviceLocator<CourseRemoteRepository>(),
     ),
   );
 
   serviceLocator.registerFactory(
     () => CreateCourseUsecase(
-      courseRepository: serviceLocator<CourseLocalRepository>(),
+      courseRepository: serviceLocator<CourseRemoteRepository>(),
     ),
   );
 
   serviceLocator.registerFactory(
     () => DeleteCourseUsecase(
-      courseRepository: serviceLocator<CourseLocalRepository>(),
+      courseRepository: serviceLocator<CourseRemoteRepository>(),
     ),
   );
 
