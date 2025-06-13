@@ -16,6 +16,7 @@ class BatchRemoteDatasource implements IBatchDataSource {
   Future<void> addBatch(BatchEntity batch) async {
     try {
       final batchApiModel = BatchApiModel.fromEntity(batch);
+
       var response = await _apiService.dio.post(
         ApiEndpoints.createBatch,
         data: batchApiModel.toJson(),

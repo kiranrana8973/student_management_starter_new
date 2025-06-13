@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:student_management/core/network/hive_service.dart';
 import 'package:student_management/features/auth/data/data_source/sudent_data_source.dart';
 import 'package:student_management/features/auth/data/model/student_hive_model.dart';
@@ -35,13 +37,13 @@ class StudentLocalDatasource implements IStudentDataSource {
   }
 
   @override
-  Future<String> uploadProfilePicture(String filePath) {
+  Future<StudentEntity> getCurrentUser() async {
     // TODO: implement uploadProfilePicture
     throw UnimplementedError();
   }
 
   @override
-  Future<StudentEntity> getCurrentUser() async {
+  Future<String> uploadProfilePicture(File file) {
     // TODO: implement uploadProfilePicture
     throw UnimplementedError();
   }

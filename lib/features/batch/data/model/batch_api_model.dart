@@ -19,7 +19,7 @@ class BatchApiModel extends Equatable {
 
   // To Json , write full code without generator
   Map<String, dynamic> toJson() {
-    return {'_id': batchId, 'batchName': batchName};
+    return {'batchName': batchName};
   }
 
   // Convert API Object to Entity
@@ -27,7 +27,7 @@ class BatchApiModel extends Equatable {
 
   // Convert Entity to API Object
   static BatchApiModel fromEntity(BatchEntity entity) =>
-      BatchApiModel(batchName: entity.batchName);
+      BatchApiModel(batchId: entity.batchId, batchName: entity.batchName);
 
   // Convert API List to Entity List
   static List<BatchEntity> toEntityList(List<BatchApiModel> models) =>

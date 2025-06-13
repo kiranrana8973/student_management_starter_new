@@ -3,7 +3,9 @@ import 'package:get_it/get_it.dart';
 import 'package:student_management/core/network/api_service.dart';
 import 'package:student_management/core/network/hive_service.dart';
 import 'package:student_management/features/auth/data/data_source/local_datasource/student_local_datasource.dart';
+import 'package:student_management/features/auth/data/data_source/remote_datasource/student_remote_datasource.dart';
 import 'package:student_management/features/auth/data/repository/local_repository/student_local_repository.dart';
+import 'package:student_management/features/auth/data/repository/remote_repository/student_remote_repository.dart';
 import 'package:student_management/features/auth/domain/use_case/student_get_current_usecase.dart';
 import 'package:student_management/features/auth/domain/use_case/student_image_upload_usecase.dart';
 import 'package:student_management/features/auth/domain/use_case/student_login_usecase.dart';
@@ -102,7 +104,7 @@ Future<void> _initCourseModule() async {
 }
 
 Future<void> _initBatchModule() async {
-  // Data Source
+  // ==================== Data Source ====================
   serviceLocator.registerFactory(
     () => BatchLocalDatasource(hiveService: serviceLocator<HiveService>()),
   );
@@ -110,7 +112,7 @@ Future<void> _initBatchModule() async {
     () => BatchRemoteDatasource(apiService: serviceLocator<ApiService>()),
   );
 
-  // Repository
+  // ==================== Repository ====================
   serviceLocator.registerFactory<BatchLocalRepository>(
     () => BatchLocalRepository(
       batchLocalDatasource: serviceLocator<BatchLocalDatasource>(),
@@ -123,6 +125,7 @@ Future<void> _initBatchModule() async {
     ),
   );
 
+  // ==================== Usecases ====================
   serviceLocator.registerFactory(
     () => GetAllBatchUsecase(
       batchRepository: serviceLocator<BatchRemoteRepository>(),
@@ -149,9 +152,16 @@ Future<void> _initBatchModule() async {
 }
 
 Future<void> _initAuthModule() async {
+  // ===================== Data Source ====================
   serviceLocator.registerFactory(
     () => StudentLocalDatasource(hiveService: serviceLocator<HiveService>()),
   );
+
+  serviceLocator.registerFactory(
+    () => StudentRemoteDataSource(apiService: serviceLocator<ApiService>()),
+  );
+
+  // ===================== Repository ====================
 
   serviceLocator.registerFactory(
     () => StudentLocalRepository(
@@ -160,28 +170,38 @@ Future<void> _initAuthModule() async {
   );
 
   serviceLocator.registerFactory(
+    () => StudentRemoteRepository(
+      studentRemoteDataSource: serviceLocator<StudentRemoteDataSource>(),
+    ),
+  );
+
+  // ===================== Usecases ====================
+
+  serviceLocator.registerFactory(
     () => StudentLoginUsecase(
-      studentRepository: serviceLocator<StudentLocalRepository>(),
+      studentRepository: serviceLocator<StudentRemoteRepository>(),
     ),
   );
 
   serviceLocator.registerFactory(
     () => StudentRegisterUsecase(
-      studentRepository: serviceLocator<StudentLocalRepository>(),
+      studentRepository: serviceLocator<StudentRemoteRepository>(),
     ),
   );
 
   serviceLocator.registerFactory(
     () => UploadImageUsecase(
-      studentRepository: serviceLocator<StudentLocalRepository>(),
+      studentRepository: serviceLocator<StudentRemoteRepository>(),
     ),
   );
 
   serviceLocator.registerFactory(
     () => StudentGetCurrentUsecase(
-      studentRepository: serviceLocator<StudentLocalRepository>(),
+      studentRepository: serviceLocator<StudentRemoteRepository>(),
     ),
   );
+
+  // ===================== ViewModels ====================
 
   serviceLocator.registerFactory(
     () => RegisterViewModel(

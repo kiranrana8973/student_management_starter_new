@@ -3,7 +3,7 @@ import 'package:student_management/features/batch/domain/entity/batch_entity.dar
 import 'package:student_management/features/course/domain/entity/course_entity.dart';
 
 class StudentEntity extends Equatable {
-  final String? userId;
+  final String? studentId;
   final String fName;
   final String lName;
   final String? image;
@@ -14,7 +14,7 @@ class StudentEntity extends Equatable {
   final String password;
 
   const StudentEntity({
-    this.userId,
+    this.studentId,
     required this.fName,
     required this.lName,
     this.image,
@@ -27,7 +27,7 @@ class StudentEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-    userId,
+    studentId,
     fName,
     lName,
     image,

@@ -56,7 +56,7 @@ class StudentHiveModel extends Equatable {
   // From Entity
   factory StudentHiveModel.fromEntity(StudentEntity entity) {
     return StudentHiveModel(
-      studentId: entity.userId,
+      studentId: entity.studentId,
       fName: entity.fName,
       lName: entity.lName,
       image: entity.image,
@@ -71,7 +71,7 @@ class StudentHiveModel extends Equatable {
   // To Entity
   StudentEntity toEntity() {
     return StudentEntity(
-      userId: studentId,
+      studentId: studentId,
       fName: fName,
       lName: lName,
       image: image,

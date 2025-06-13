@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:student_management/features/auth/domain/entity/student_entity.dart';
 
 abstract interface class IStudentDataSource {
@@ -5,7 +7,7 @@ abstract interface class IStudentDataSource {
 
   Future<String> loginStudent(String username, String password);
 
-  Future<String> uploadProfilePicture(String filePath);
+  Future<String> uploadProfilePicture(File file);
 
   Future<StudentEntity> getCurrentUser();
 }

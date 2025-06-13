@@ -17,7 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RegisterView extends StatefulWidget {
-  RegisterView({super.key});
+  const RegisterView({super.key});
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
@@ -50,7 +50,7 @@ class _RegisterViewState extends State<RegisterView> {
       if (image != null) {
         setState(() {
           _img = File(image.path);
-          // Send image to server
+          // Send image to server when selected
           context.read<RegisterViewModel>().add(UploadImageEvent(file: _img!));
         });
       } else {
