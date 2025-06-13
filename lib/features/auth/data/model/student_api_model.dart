@@ -15,7 +15,7 @@ class StudentApiModel extends Equatable {
   final String? image;
   final String phone;
   final BatchApiModel batch;
-  final List<CourseApiModel> courses;
+  final List<CourseApiModel> course;
   final String username;
   final String? password;
 
@@ -26,7 +26,7 @@ class StudentApiModel extends Equatable {
     required this.image,
     required this.phone,
     required this.batch,
-    required this.courses,
+    required this.course,
     required this.username,
     required this.password,
   });
@@ -45,7 +45,7 @@ class StudentApiModel extends Equatable {
       image: image,
       phone: phone,
       batch: batch.toEntity(),
-      courses: courses.map((e) => e.toEntity()).toList(),
+      courses: course.map((e) => e.toEntity()).toList(),
       username: username,
       password: password ?? '',
     );
@@ -59,7 +59,7 @@ class StudentApiModel extends Equatable {
       image: entity.image,
       phone: entity.phone,
       batch: BatchApiModel.fromEntity(entity.batch),
-      courses: entity.courses.map((e) => CourseApiModel.fromEntity(e)).toList(),
+      course: entity.courses.map((e) => CourseApiModel.fromEntity(e)).toList(),
       username: entity.username,
       password: entity.password,
     );
@@ -74,7 +74,7 @@ class StudentApiModel extends Equatable {
     image,
     phone,
     batch,
-    courses,
+    course,
     username,
     password,
   ];

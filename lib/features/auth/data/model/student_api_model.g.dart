@@ -14,7 +14,7 @@ StudentApiModel _$StudentApiModelFromJson(Map<String, dynamic> json) =>
       image: json['image'] as String?,
       phone: json['phone'] as String,
       batch: BatchApiModel.fromJson(json['batch'] as Map<String, dynamic>),
-      courses: (json['courses'] as List<dynamic>)
+      course: (json['courses'] as List<dynamic>)
           .map((e) => CourseApiModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       username: json['username'] as String,
@@ -29,7 +29,7 @@ Map<String, dynamic> _$StudentApiModelToJson(StudentApiModel instance) =>
       'image': instance.image,
       'phone': instance.phone,
       'batch': instance.batch.batchId,
-      'courses': instance.courses.map((e) => e.courseId).toList(),
+      'course': instance.course.map((e) => e.courseId).toList(),
       'username': instance.username,
       'password': instance.password,
     };

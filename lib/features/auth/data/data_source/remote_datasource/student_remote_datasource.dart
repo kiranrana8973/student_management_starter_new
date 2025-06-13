@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:student_management/app/constant/api_endpoints.dart';
 import 'package:student_management/core/network/api_service.dart';
@@ -31,10 +30,12 @@ class StudentRemoteDataSource implements IStudentDataSource {
       throw Exception('Failed to login student: $e');
     }
   }
+
   @override
   Future<void> registerStudent(StudentEntity studentData) async {
     try {
       final studentApiModel = StudentApiModel.fromEntity(studentData);
+      final data = studentApiModel.toJson();
       final response = await _apiService.dio.post(
         ApiEndpoints.register,
         data: studentApiModel.toJson(),
