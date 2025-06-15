@@ -35,7 +35,6 @@ class StudentRemoteDataSource implements IStudentDataSource {
   Future<void> registerStudent(StudentEntity studentData) async {
     try {
       final studentApiModel = StudentApiModel.fromEntity(studentData);
-      final data = studentApiModel.toJson();
       final response = await _apiService.dio.post(
         ApiEndpoints.register,
         data: studentApiModel.toJson(),
