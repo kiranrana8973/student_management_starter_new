@@ -38,10 +38,11 @@ class BatchRemoteDatasource implements IBatchDataSource {
   }
 
   @override
-  Future<void> deleteBatch(String batchId) async {
+  Future<void> deleteBatch(String batchId, String? token) async {
     try {
-      var response = await _apiService.dio.delete(
+     final response = await _apiService.dio.delete(
         '${ApiEndpoints.deleteBatch}/$batchId',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       if (response.statusCode == 200) {

@@ -22,7 +22,7 @@ class CourseLocalDataSource implements ICourseDataSource {
   }
 
   @override
-  Future<void> deleteCourse(String id) async {
+  Future<void> deleteCourse(String id, String? token) async {
     try {
       _hiveService.deleteCourse(id);
     } catch (e) {

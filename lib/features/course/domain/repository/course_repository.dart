@@ -5,5 +5,5 @@ import 'package:student_management/features/course/domain/entity/course_entity.d
 abstract interface class ICourseRepository {
   Future<Either<Failure, List<CourseEntity>>> getCourses();
   Future<Either<Failure, void>> createCourse(CourseEntity course);
-  Future<Either<Failure, void>> deleteCourse(String id);
+  Future<Either<Failure, void>> deleteCourse(String id, String? token);
 }

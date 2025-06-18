@@ -20,9 +20,12 @@ class BatchLocalRepository implements IBatchRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteBatch(String batchId) async {
+  Future<Either<Failure, void>> deleteBatch(
+    String batchId,
+    String? token,
+  ) async {
     try {
-      await batchLocalDatasource.deleteBatch(batchId);
+      await batchLocalDatasource.deleteBatch(batchId, token);
       return const Right(null);
     } catch (e) {
       return Left(LocalDatabaseFailure(message: 'Failed to delete batch'));

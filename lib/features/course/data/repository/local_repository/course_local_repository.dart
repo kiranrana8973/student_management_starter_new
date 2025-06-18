@@ -21,9 +21,10 @@ class CourseLocalRepository implements ICourseRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteCourse(String id) {
+  Future<Either<Failure, void>> deleteCourse(String id, String? token) {
+    // Note: The token parameter is not used in local repository, but kept for consistency with the interface.
     try {
-      _courseLocalDataSource.deleteCourse(id);
+      _courseLocalDataSource.deleteCourse(id, token);
       return Future.value(Right(null));
     } catch (e) {
       return Future.value(Left(LocalDatabaseFailure(message: e.toString())));

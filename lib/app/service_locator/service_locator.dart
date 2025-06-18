@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_management/app/shared_pref/token_shared_prefs.dart';
 import 'package:student_management/core/network/api_service.dart';
 import 'package:student_management/core/network/hive_service.dart';
 import 'package:student_management/features/auth/data/data_source/local_datasource/student_local_datasource.dart';
@@ -35,8 +37,8 @@ final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
   await _initHiveService();
-  await initApiModule();
-  // Initialize all modules
+  await _initApiService();
+  await _initSharedPrefs();
   await _initCourseModule();
   await _initBatchModule();
   await _initAuthModule();
@@ -44,44 +46,55 @@ Future<void> initDependencies() async {
   await _initSplashModule();
 }
 
+Future<void> _initApiService() async {
+  serviceLocator.registerLazySingleton(() => ApiService(Dio()));
+}
+
 Future<void> _initHiveService() async {
   serviceLocator.registerLazySingleton(() => HiveService());
 }
 
-Future<void> initApiModule() async {
-  // Dio instance
-  serviceLocator.registerLazySingleton<Dio>(() => Dio());
-  serviceLocator.registerLazySingleton(() => ApiService(serviceLocator<Dio>()));
+Future<void> _initSharedPrefs() async {
+  // Initialize Shared Preferences if needed
+  final sharedPrefs = await SharedPreferences.getInstance();
+  serviceLocator.registerLazySingleton(() => sharedPrefs);
+  serviceLocator.registerLazySingleton(
+    () => TokenSharedPrefs(
+      sharedPreferences: serviceLocator<SharedPreferences>(),
+    ),
+  );
 }
 
 Future<void> _initCourseModule() async {
   // Data Source
-  serviceLocator.registerFactory(
-    () => CourseRemoteDataSource(apiService: serviceLocator<ApiService>()),
-  );
   serviceLocator.registerFactory<CourseLocalDataSource>(
     () => CourseLocalDataSource(hiveService: serviceLocator<HiveService>()),
   );
 
-  // Repository
-  serviceLocator.registerFactory<CourseRemoteRepository>(
-    () => CourseRemoteRepository(
-      courseRemoteDataSource: serviceLocator<CourseRemoteDataSource>(),
-    ),
+  serviceLocator.registerFactory(
+    () => CourseRemoteDatasource(apiService: serviceLocator<ApiService>()),
   );
+
+  // Repository
   serviceLocator.registerFactory(
     () => CourseLocalRepository(
       courseLocalDataSource: serviceLocator<CourseLocalDataSource>(),
     ),
   );
 
-  // Usecase
+  serviceLocator.registerFactory(
+    () => CourseRemoteRepository(
+      courseRemoteDataSource: serviceLocator<CourseRemoteDatasource>(),
+    ),
+  );
+
   serviceLocator.registerFactory(
     () => GetAllCourseUsecase(
       courseRepository: serviceLocator<CourseRemoteRepository>(),
     ),
   );
 
+  // Usecases
   serviceLocator.registerFactory(
     () => CreateCourseUsecase(
       courseRepository: serviceLocator<CourseRemoteRepository>(),
@@ -91,6 +104,7 @@ Future<void> _initCourseModule() async {
   serviceLocator.registerFactory(
     () => DeleteCourseUsecase(
       courseRepository: serviceLocator<CourseRemoteRepository>(),
+      tokenSharedPrefs: serviceLocator<TokenSharedPrefs>(),
     ),
   );
 
@@ -104,15 +118,16 @@ Future<void> _initCourseModule() async {
 }
 
 Future<void> _initBatchModule() async {
-  // ==================== Data Source ====================
+  // Data Source
   serviceLocator.registerFactory(
     () => BatchLocalDatasource(hiveService: serviceLocator<HiveService>()),
   );
+
   serviceLocator.registerFactory(
     () => BatchRemoteDatasource(apiService: serviceLocator<ApiService>()),
   );
 
-  // ==================== Repository ====================
+  // Repository
   serviceLocator.registerFactory<BatchLocalRepository>(
     () => BatchLocalRepository(
       batchLocalDatasource: serviceLocator<BatchLocalDatasource>(),
@@ -125,7 +140,7 @@ Future<void> _initBatchModule() async {
     ),
   );
 
-  // ==================== Usecases ====================
+  // Usecases
   serviceLocator.registerFactory(
     () => GetAllBatchUsecase(
       batchRepository: serviceLocator<BatchRemoteRepository>(),
@@ -139,6 +154,7 @@ Future<void> _initBatchModule() async {
   serviceLocator.registerFactory(
     () => DeleteBatchUsecase(
       batchRepository: serviceLocator<BatchRemoteRepository>(),
+      tokenSharedPrefs: serviceLocator<TokenSharedPrefs>(),
     ),
   );
 
@@ -152,7 +168,7 @@ Future<void> _initBatchModule() async {
 }
 
 Future<void> _initAuthModule() async {
-  // ===================== Data Source ====================
+  // Data Source
   serviceLocator.registerFactory(
     () => StudentLocalDatasource(hiveService: serviceLocator<HiveService>()),
   );
@@ -161,7 +177,7 @@ Future<void> _initAuthModule() async {
     () => StudentRemoteDataSource(apiService: serviceLocator<ApiService>()),
   );
 
-  // ===================== Repository ====================
+  // Repository
 
   serviceLocator.registerFactory(
     () => StudentLocalRepository(
@@ -175,8 +191,7 @@ Future<void> _initAuthModule() async {
     ),
   );
 
-  // ===================== Usecases ====================
-
+  // Usecases
   serviceLocator.registerFactory(
     () => StudentLoginUsecase(
       studentRepository: serviceLocator<StudentRemoteRepository>(),
@@ -200,8 +215,6 @@ Future<void> _initAuthModule() async {
       studentRepository: serviceLocator<StudentRemoteRepository>(),
     ),
   );
-
-  // ===================== ViewModels ====================
 
   serviceLocator.registerFactory(
     () => RegisterViewModel(

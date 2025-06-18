@@ -5,10 +5,10 @@ import 'package:student_management/features/course/domain/entity/course_entity.d
 import 'package:student_management/features/course/domain/repository/course_repository.dart';
 
 class CourseRemoteRepository implements ICourseRepository {
-  final CourseRemoteDataSource _courseRemoteDataSource;
+  final CourseRemoteDatasource _courseRemoteDataSource;
 
   CourseRemoteRepository({
-    required CourseRemoteDataSource courseRemoteDataSource,
+    required CourseRemoteDatasource courseRemoteDataSource,
   }) : _courseRemoteDataSource = courseRemoteDataSource;
 
   @override
@@ -22,9 +22,9 @@ class CourseRemoteRepository implements ICourseRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteCourse(String id) async {
+  Future<Either<Failure, void>> deleteCourse(String id, String? token) async {
     try {
-      await _courseRemoteDataSource.deleteCourse(id);
+      await _courseRemoteDataSource.deleteCourse(id, token);
       return Right(null);
     } catch (e) {
       return Left(RemoteDatabaseFailure(message: e.toString()));

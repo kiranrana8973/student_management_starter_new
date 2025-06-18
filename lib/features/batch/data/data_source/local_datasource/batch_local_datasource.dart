@@ -18,7 +18,7 @@ class BatchLocalDatasource implements IBatchDataSource {
   }
 
   @override
-  Future<void> deleteBatch(String batchId) async {
+  Future<void> deleteBatch(String batchId, String? token) async {
     try {
       await hiveService.deleteBatch(batchId);
     } catch (e) {

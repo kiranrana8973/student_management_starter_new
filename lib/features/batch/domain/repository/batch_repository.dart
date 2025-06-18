@@ -5,5 +5,5 @@ import 'package:student_management/features/batch/domain/entity/batch_entity.dar
 abstract interface class IBatchRepository {
   Future<Either<Failure, void>> addBatch(BatchEntity batch);
   Future<Either<Failure, List<BatchEntity>>> getBatches();
-  Future<Either<Failure, void>> deleteBatch(String batchId);
+  Future<Either<Failure, void>> deleteBatch(String batchId,String? token);
 }

@@ -10,10 +10,7 @@ class CourseApiModel extends Equatable {
   final String? courseId;
   final String courseName;
 
-  const CourseApiModel({
-    this.courseId,
-    required this.courseName,
-  });
+  const CourseApiModel({this.courseId, required this.courseName});
 
   factory CourseApiModel.fromJson(Map<String, dynamic> json) =>
       _$CourseApiModelFromJson(json);
@@ -22,7 +19,7 @@ class CourseApiModel extends Equatable {
 
   // To entity
 
-// From Entity
+  // From Entity
   factory CourseApiModel.fromEntity(CourseEntity entity) {
     return CourseApiModel(
       courseId: entity.courseId,
@@ -32,10 +29,7 @@ class CourseApiModel extends Equatable {
 
   // To Entity
   CourseEntity toEntity() {
-    return CourseEntity(
-      courseId: courseId,
-      courseName: courseName,
-    );
+    return CourseEntity(courseId: courseId, courseName: courseName);
   }
 
   // To Entity List
