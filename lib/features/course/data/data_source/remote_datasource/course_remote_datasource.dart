@@ -55,7 +55,7 @@ class CourseRemoteDatasource implements ICourseDataSource {
       }
     } on DioException catch (e) {
       // Handle DioException
-      throw Exception('Failed to delete course: $e');
+      throw Exception('Failed to delete course: ${e}');
     } catch (e) {
       // Handle other exceptions
       throw Exception('An unexpected error occurred: $e');

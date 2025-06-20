@@ -195,6 +195,7 @@ Future<void> _initAuthModule() async {
   serviceLocator.registerFactory(
     () => StudentLoginUsecase(
       studentRepository: serviceLocator<StudentRemoteRepository>(),
+      tokenSharedPrefs: serviceLocator<TokenSharedPrefs>(),
     ),
   );
 
