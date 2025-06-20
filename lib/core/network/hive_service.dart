@@ -11,8 +11,6 @@ class HiveService {
     var directory = await getApplicationDocumentsDirectory();
     var path = '${directory.path}student_management.db';
 
-
-
     Hive.init(path);
 
     // Register Adapters
