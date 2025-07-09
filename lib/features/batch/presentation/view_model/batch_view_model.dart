@@ -20,7 +20,7 @@ class BatchViewModel extends Bloc<BatchEvent, BatchState> {
     on<DeleteBatchEvent>(_onDeleteBatch);
 
     // Load batches when the ViewModel is initialized
-    add(LoadBatchesEvent());
+    //  add(LoadBatchesEvent());
   }
 
   Future<void> _onLoadBatches(
